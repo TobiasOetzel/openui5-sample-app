@@ -3,11 +3,28 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>OpenUI5 Todo App</title>
+	<link rel="manifest" href="/web-manifest.json">
+	<meta name="theme-color" content="#2F3BA2" />
+	<script>
+		if ('serviceWorker' in navigator) {
+			(async () => {
+				await navigator.serviceWorker.register('/service-worker.js');
+				const swRegistration =  await navigator.serviceWorker.ready;
+				await swRegistration.sync.register('syncTodos');
+			})()
+		}
+	</script>
+</head>
 
+	<title>OpenUI5 Todo App</title>
+	<noscript>
+		Please enable javascript to add your TODOs
+	</noscript>
+	<script src="/thirdparty/pouchdb-7.1.1.min.js"></script>
 	<script id="sap-ui-bootstrap"
 		src="resources/sap-ui-core.js"
 		data-sap-ui-libs="sap.m"
+			data-sap-ui-language="en"
 		data-sap-ui-xx-waitForTheme="true"
 		data-sap-ui-theme="sap_fiori_3"
 		data-sap-ui-resourceRoots='{
@@ -17,7 +34,7 @@
 		data-sap-ui-compatVersion="edge"
 		data-sap-ui-async="true">
 	</script>
-</head>
+
 
 <body class="sapUiBody">
 	<div data-sap-ui-component data-name="sap.ui.demo.todo" data-id="container" data-settings='{"id" : "todo"}'></div>

@@ -58,3 +58,15 @@ typings/
 .env
 
 dist/
+
+log.txt
+
+config.json
+
+_replicator
+
+_users
+
+pouch__all_dbs__
+
+todos

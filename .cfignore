@@ -1,0 +1,9 @@
+node_modules
+pouch__all_dbs__
+.idea
+_replicator
+_users
+todos
+webapp
+config.json
+log.txt

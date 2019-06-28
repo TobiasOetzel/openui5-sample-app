@@ -6,11 +6,30 @@ sap.ui.define([
 ], function(Controller, JSONModel, Filter, FilterOperator) {
 	"use strict";
 
+	var todos = new PouchDB('todos');
+
+	function generateGuid() {
+		var result, i, j;
+		result = '';
+		for(j=0; j<32; j++) {
+			if( j == 8 || j == 12 || j == 16 || j == 20)
+				result = result + '-';
+			i = Math.floor(Math.random()*16).toString(16).toUpperCase();
+			result = result + i;
+		}
+		return result;
+	}
+
 	return Controller.extend("sap.ui.demo.todo.controller.App", {
 
 		onInit: function() {
 			this.aSearchFilters = [];
 			this.aTabFilters = [];
+			todos.allDocs({include_docs: true, descending: true}, function(err, doc) {
+				this.getOwnerComponent().getModel().setProperty('/todos', doc.rows.map(function (row) {
+					return row.doc
+				}))
+			}.bind(this));
 		},
 
 		/**
@@ -20,10 +39,14 @@ sap.ui.define([
 			var oModel = this.getView().getModel();
 			var aTodos = oModel.getProperty("/todos").map(function (oTodo) { return Object.assign({}, oTodo); });
 
-			aTodos.push({
+			let todo = {
+				_id: generateGuid(),
 				title: oModel.getProperty("/newTodo"),
 				completed: false
-			});
+			};
+			aTodos.push(todo);
+
+			todos.put(todo);
 
 			oModel.setProperty("/todos", aTodos);
 			oModel.setProperty("/newTodo", "");
